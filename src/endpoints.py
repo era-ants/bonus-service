@@ -13,30 +13,37 @@ from fastapi import WebSocket
 from src import service
 from src import data_manager
 from src import schemas
-from fastapi import status
 from src import error_messages
 from src.dependencies import get_db_session
 
 router = APIRouter()
 
 
-@router.get("/", response_model=schemas.HelloMessage, responses=error_messages.ERROR_MSG)
-async def root(session=Depends(get_db_session)):
-    """Endpoint return first user"""
+@router.post("/", response_model=schemas.Account, status_code=201,
+             responses=error_messages.ACCOUNT_ALREADY_EXIST['api_docs'])
+async def create_account(account: schemas.CreateAccount, session=Depends(get_db_session)):
+    """Endpoint for creating bonus account"""
 
-    user = data_manager.first_user(session)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Could not found any users",
-        )
-    message: str = service.get_hello_message_for_user(user)
-    return schemas.HelloMessage(message=message)
+    account = data_manager.create_account(session, account)
+    if not account:
+        raise HTTPException(**error_messages.ACCOUNT_ALREADY_EXIST['exception'])
+    return account
+
+
+@router.get("/{client_id}", response_model=schemas.Account, status_code=200,
+             responses=error_messages.ACCOUNT_ALREADY_EXIST['api_docs'])
+async def get_account(client_id: int, session=Depends(get_db_session)):
+    """Endpoint return account with Client ID"""
+
+    account = data_manager.get_client_account(session, client_id)
+    if not account:
+        raise HTTPException(**error_messages.ACCOUNT_ALREADY_EXIST['exception'])
+    return account
 
 
 @router.websocket("create-account")
 async def create_bonus_account(websocket: WebSocket):
-
+    pass
 # await websocket.accept()
 # while True:
 #     data = await websocket.receive_text()

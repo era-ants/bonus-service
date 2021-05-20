@@ -12,22 +12,18 @@ from pydantic import BaseModel
 class HelloMessage(BaseModel):
     message: str
 
-class Item(BaseModel):
-    id: int
-    title: str
-    description: str
-    owner_id:int
 
-    class Config:
-        orm_mode = True
-        
-class UserBase(BaseModel):
-    email: str
+class CreateAccount(BaseModel):
+    client_id: int
 
-class User(UserBase):
+
+class GetAccount(BaseModel):
+    client_id: int
+
+
+class Account(BaseModel):
     id: int
-    is_active: bool
-    items: List[Item] = []
+    bonus_count: int
 
     class Config:
         orm_mode = True

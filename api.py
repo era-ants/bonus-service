@@ -26,7 +26,7 @@ app.add_middleware(
     allow_methods=["OPTIONS", "GET", "POST", "PUT",],
     allow_headers=["*"],
 )
-app.include_router(endpoints.router, tags=["users"])
+app.include_router(endpoints.router, tags=["bonus account"])
 
 database.init_db()
 
