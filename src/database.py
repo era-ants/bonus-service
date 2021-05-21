@@ -10,6 +10,6 @@ from src import models
 engine = sa.create_engine(config.DATABASE_URL, connect_args={"check_same_thread": False})
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 def init_db():
     models.Base.metadata.create_all(bind=engine)
-    

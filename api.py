@@ -12,12 +12,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from src import database
 from src import config
 from src import endpoints
+from src.websocket_manager import subscribe_for_client_signup
 
 app = FastAPI(title="API")
 
-origins = [
-    "http://localhost:8080"
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,7 +27,12 @@ app.add_middleware(
 )
 app.include_router(endpoints.router, tags=["bonus account"])
 
-database.init_db()
+
+@app.on_event("startup")
+async def startup_event():
+    database.init_db()
+    subscribe_for_client_signup()
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host=config.IP_ADDR, port=config.HOST_PORT, log_level="info")
