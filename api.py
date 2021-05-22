@@ -31,7 +31,7 @@ app.include_router(endpoints.router, tags=["bonus account"])
 @app.on_event("startup")
 async def startup_event():
     database.init_db()
-    subscribe_for_client_signup()
+    # await subscribe_for_client_signup()
 
 
 if __name__ == "__main__":

@@ -1,9 +1,9 @@
 import websockets
 import asyncio
-from config import CLIENT_SERVICE_URL
+from src.config import CLIENT_SERVICE_URL
 
 
-def subscribe_for_client_signup():
+async def subscribe_for_client_signup():
         uri = f"ws://{CLIENT_SERVICE_URL}/clientshub"
         async with websockets.connect(uri) as websocket:
             while True:

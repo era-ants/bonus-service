@@ -40,6 +40,14 @@ async def get_account(client_id: int, session=Depends(get_db_session)):
         raise HTTPException(**error_messages.ACCOUNT_ALREADY_EXIST['exception'])
     return account
 
+@router.post("/")
+def create_bonus_account(account: schemas.CreateAccount, session=Depends(get_db_session)):
+        account = data_manager.create_account(session, account)
+        if account:
+            return account
+        else:
+            raise HTTPException(**error_messages.ACCOUNT_ALREADY_EXIST['exception'])
+
 
 @router.websocket("create-account")
 async def create_bonus_account(websocket: WebSocket, session=Depends(get_db_session)):
